@@ -26,6 +26,7 @@
 <script setup>
 import { getPostsById, updatePost } from '@/api/posts';
 import PostForm from '@/components/posts/PostForm.vue';
+import { useAlert } from '@/composables/alert';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -54,8 +55,8 @@ fetchPost();
 const edit = async () => {
   try {
     await updatePost(id, { ...form.value });
-    // router.push({ name: 'PostDetail', params: { id } });
-    vAlert('수정이 완료되었습니다!', 'success');
+    router.push({ name: 'PostDetail', params: { id } });
+    vSuccess('수정이 완료되었습니다!');
   } catch (error) {
     console.error(error);
     vAlert(error.message);
@@ -64,21 +65,7 @@ const edit = async () => {
 
 const goDetailPage = () => router.push({ name: 'PostDetail', params: { id } });
 
-// alert
-/* const showAlert = ref(false);
-const alertMessage = ref('');
-const alertType = ref(''); */
-
-const alerts = ref([]);
-const vAlert = (message, type = 'error') => {
-  alerts.value.push({ message, type });
-  /* showAlert.value = true;
-  alertMessage.value = message;
-  alertType.value = type; */
-  setTimeout(() => {
-    alerts.value.shift();
-  }, 2000);
-};
+const { vAlert, vSuccess } = useAlert();
 </script>
 
 <style lang="scss" scoped></style>
