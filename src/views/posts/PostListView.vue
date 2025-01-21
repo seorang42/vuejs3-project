@@ -14,6 +14,7 @@
           :content="item.content"
           :created-at="item.createdAt"
           @click="goPage(item.id)"
+          @modal="openModal(item)"
         />
       </template>
     </AppGrid>
@@ -23,6 +24,16 @@
       :page-count="pageCount"
       @page="page => (params._page = page)"
     />
+
+    <Teleport to="#modal">
+      <PostModal
+        v-model="show"
+        :title="modalTitle"
+        :content="modalContent"
+        :createdAt="modalCreatedAt"
+      />
+    </Teleport>
+
     <template v-if="posts && posts.length > 0">
       <hr class="my-5" />
       <AppCard>
@@ -42,6 +53,7 @@ import AppCard from '@/components/AppCard.vue';
 import AppPagination from '@/components/AppPagination.vue';
 import AppGrid from '@/components/AppGrid.vue';
 import PostFilter from '@/components/posts/PostFilter.vue';
+import PostModal from '@/components/posts/PostModal.vue';
 const router = useRouter();
 const posts = ref([]);
 const params = ref({
@@ -82,6 +94,18 @@ const goPage = id => {
     },
     hash: '#world',
   });
+};
+
+// modal
+const show = ref(false);
+const modalTitle = ref('');
+const modalContent = ref('');
+const modalCreatedAt = ref('');
+const openModal = ({ title, content, createdAt }) => {
+  show.value = true;
+  modalTitle.value = title;
+  modalContent.value = content;
+  modalCreatedAt.value = createdAt;
 };
 </script>
 
