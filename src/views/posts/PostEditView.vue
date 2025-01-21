@@ -25,7 +25,6 @@
 
 <script setup>
 import { getPostsById, updatePost } from '@/api/posts';
-import AppAlert from '@/components/AppAlert.vue';
 import PostForm from '@/components/posts/PostForm.vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
