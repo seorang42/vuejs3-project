@@ -63,7 +63,7 @@
     </nav>
     <hr class="my-5" />
     <AppCard>
-      <PostDetailView :id="2" />
+      <PostDetailView :id="'2'" />
     </AppCard>
   </div>
 </template>
