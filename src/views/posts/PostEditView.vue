@@ -19,7 +19,8 @@
       </template>
     </PostForm>
   </div>
-  <AppAlert :show="showAlert" :message="alertMessage" :type="alertType" />
+  <!-- <AppAlert :show="showAlert" :message="alertMessage" :type="alertType" /> -->
+  <AppAlert :items="alerts" />
 </template>
 
 <script setup>
@@ -38,8 +39,13 @@ const form = ref({
   content: null,
 });
 const fetchPost = async () => {
-  const { data } = await getPostsById(id);
-  setForm(data);
+  try {
+    const { data } = await getPostsById(id);
+    setForm(data);
+  } catch (error) {
+    console.error(error);
+    vAlert(error.message);
+  }
 };
 const setForm = ({ title, content }) => {
   form.value.title = title;
@@ -53,22 +59,25 @@ const edit = async () => {
     vAlert('수정이 완료되었습니다!', 'success');
   } catch (error) {
     console.error(error);
-    vAlert('네트워크 오류');
+    vAlert(error.message);
   }
 };
 
 const goDetailPage = () => router.push({ name: 'PostDetail', params: { id } });
 
 // alert
-const showAlert = ref(false);
+/* const showAlert = ref(false);
 const alertMessage = ref('');
-const alertType = ref('');
+const alertType = ref(''); */
+
+const alerts = ref([]);
 const vAlert = (message, type = 'error') => {
-  showAlert.value = true;
+  alerts.value.push({ message, type });
+  /* showAlert.value = true;
   alertMessage.value = message;
-  alertType.value = type;
+  alertType.value = type; */
   setTimeout(() => {
-    showAlert.value = false;
+    alerts.value.shift();
   }, 2000);
 };
 </script>
