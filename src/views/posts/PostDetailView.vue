@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2>{{ form.title }}</h2>
-    <p>{{ form.content }}</p>
-    <p class="text-muted">{{ form.createdAt }}</p>
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+    <p class="text-muted">{{ post.createdAt }}</p>
     <hr class="my-4" />
     <div class="row g-2">
       <div class="col-auto">
@@ -21,7 +21,7 @@
         </button>
       </div>
       <div class="col-auto">
-        <button class="btn btn-outline-danger">삭제</button>
+        <button class="btn btn-outline-danger" @click="removePost">삭제</button>
       </div>
     </div>
     <!-- {{ $route.params }}
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { getPostsById } from '@/api/posts';
+import { deletePost, getPostsById } from '@/api/posts';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -41,17 +41,37 @@ const props = defineProps({
 
 const router = useRouter();
 // const id = route.params.id;
-const form = ref({});
-// const form = reactive({});
+const post = ref({});
+// const post = reactive({});
 
-const fetchPost = () => {
-  const data = getPostsById(props.id);
-  form.value = { ...data };
-  /* form.title = data.title;
-  form.content = data.content;
-  form.createdAt = data.createdAt; */
+const fetchPost = async () => {
+  try {
+    const { data } = await getPostsById(props.id);
+    setPost(data);
+    /* post.title = data.title;
+  post.content = data.content;
+  post.createdAt = data.createdAt; */
+  } catch (error) {
+    console.error(error);
+  }
+};
+const setPost = ({ title, content, createdAt }) => {
+  post.value.title = title;
+  post.value.content = content;
+  post.value.createdAt = createdAt;
 };
 fetchPost();
+const removePost = async () => {
+  try {
+    if (!confirm('삭제 하시겠습니까?')) {
+      return;
+    }
+    await deletePost(props.id);
+    router.push({ name: 'PostList' });
+  } catch (error) {
+    console.error(error);
+  }
+};
 const goListPage = () => router.push({ name: 'PostList' });
 const goEditPage = () =>
   router.push({ name: 'PostEdit', params: { id: props.id } });
