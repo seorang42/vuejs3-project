@@ -8,6 +8,7 @@
     <template #footer>
       <div class="d-flex flex-row-reverse">
         <button class="btn" @click.stop="$emit('modal')">🤪</button>
+        <button class="btn" @click.stop="$emit('preview')">😂</button>
       </div>
     </template>
   </AppCard>
@@ -28,7 +29,7 @@ const props = defineProps({
     type: [String, Date, Number],
   },
 });
-defineEmits(['modal']);
+defineEmits(['modal', 'preview']);
 const dayjs = inject('dayjs');
 const createdDate = computed(() =>
   dayjs(props.createdAt).format('YYYY.MM.DD HH:mm:ss'),
