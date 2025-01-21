@@ -3,17 +3,19 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-// import globalComponents from './plugins/global-components';
+import globalComponents from './plugins/global-components';
 // import focus from './directive/focus';
 
 const app = createApp(App);
-// app.use(globalComponents);
+app.use(globalComponents);
 // app.directive('focus', focus);
 app.use(router);
 app.use(globalDirective);
+app.use(dayjs);
 app.mount('#app');
 import 'bootstrap/dist/js/bootstrap.js';
 import globalDirective from './plugins/global-directive';
+import dayjs from './plugins/dayjs';
 
 /* console.log('MODE: ', import.meta.env.MODE);
 console.log('BASE_URL: ', import.meta.env.BASE_URL);
