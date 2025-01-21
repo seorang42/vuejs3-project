@@ -51,11 +51,10 @@
 </template>
 
 <script setup>
-import { deletePost, getPostsById } from '@/api/posts';
 import AppError from '@/components/app/AppError.vue';
 import AppLoading from '@/components/app/AppLoading.vue';
 import { useAlert } from '@/composables/alert';
-import { ref } from 'vue';
+import { useAxios } from '@/hooks/useAxios';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({
@@ -63,58 +62,38 @@ const props = defineProps({
 });
 
 const router = useRouter();
-// const id = route.params.id;
-const post = ref({
-  title: null,
-  content: null,
-  createdAt: null,
-});
-const error = ref(null);
-const loading = ref(false);
+const { error, loading, data: post } = useAxios(`/posts/${props.id}`);
 
-const fetchPost = async () => {
-  try {
-    loading.value = true;
-    const { data } = await getPostsById(props.id);
-    setPost(data);
-    /* post.title = data.title;
-  post.content = data.content;
-  post.createdAt = data.createdAt; */
-  } catch (err) {
-    error.value = err;
-  } finally {
-    loading.value = false;
-  }
-};
-const setPost = ({ title, content, createdAt }) => {
-  post.value.title = title;
-  post.value.content = content;
-  post.value.createdAt = createdAt;
-};
-fetchPost();
+const {
+  error: removeError,
+  loading: removeLoading,
+  execute,
+} = useAxios(
+  `posts/${props.id}`,
+  { method: 'delete' },
+  {
+    immediate: false,
+    onSuccess: () => {
+      vSuccess('삭제가 완료되었습니다');
+      router.push({ name: 'PostList' });
+    },
+    onError: () => {
+      removeLoading.value = false;
+    },
+  },
+);
 
-const removeError = ref(null);
-const removeLoading = ref(false);
 const removePost = async () => {
-  try {
-    if (!confirm('삭제 하시겠습니까?')) {
-      return;
-    }
-    removeLoading.value = true;
-    await deletePost(props.id);
-    router.push({ name: 'PostList' });
-  } catch (err) {
-    vAlert(err.message);
-    removeError.value = err;
-  } finally {
-    removeLoading.value = false;
+  if (!confirm('삭제 하시겠습니까?')) {
+    return;
   }
+  execute();
 };
 const goListPage = () => router.push({ name: 'PostList' });
 const goEditPage = () =>
   router.push({ name: 'PostEdit', params: { id: props.id } });
 
-const { vAlert } = useAlert();
+const { vSuccess } = useAlert();
 </script>
 
 <style lang="scss" scoped></style>
