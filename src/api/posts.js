@@ -10,3 +10,7 @@ const posts = [
 export function getPosts() {
   return posts;
 }
+
+export function getPostsById(id) {
+  return posts.find(item => item.id === id);
+}
