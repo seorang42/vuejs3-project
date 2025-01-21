@@ -4,7 +4,8 @@
     <hr class="my-4" />
     <PostFilter
       v-model:title="params.title_like"
-      v-model:limit="params._limit"
+      :limit="params._limit"
+      @update:limit="changeLimit"
     />
     <hr class="my-4" />
 
@@ -12,8 +13,12 @@
 
     <AppError v-else-if="error" :message="error.message" />
 
+    <template v-else-if="!isExits">
+      <p class="text-center py-5 text-muted">No Result</p>
+    </template>
+
     <template v-else>
-      <AppGrid :items="posts">
+      <AppGrid :items="posts" col-class="col-12 col-md-6 col-lg-4">
         <template v-slot="{ item }">
           <PostItem
             :title="item.title"
@@ -69,10 +74,16 @@ const selectPreview = id => (previewId.value = id);
 const params = ref({
   _sort: 'createdAt',
   _order: 'desc',
-  _limit: 3,
+  _limit: 6,
   _page: 1,
   title_like: '',
 });
+const changeLimit = value => {
+  params.value._limit = value;
+  params.value._page = 1;
+};
+const isExits = computed(() => posts.value && posts.value.length > 0);
+
 // pagination
 const totalCount = computed(() => response.value.headers['x-total-count']);
 const pageCount = computed(() =>
