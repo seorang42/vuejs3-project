@@ -2,14 +2,13 @@
   "posts": [
     {
       "title": "게시글 10",
-      "content": "10시글",
+      "content": "10시글abaw",
       "createdAt": 1737441555142,
       "id": 10
     },
     {
       "title": "asd",
-      "content": "asd",
-      "createdAt": 1737442863575,
+      "content": "asdabab",
       "id": 11
     },
     {
@@ -19,9 +18,14 @@
     },
     {
       "title": "제목",
-      "content": "내용",
-      "createdAt": 1737445804631,
+      "content": "내용asfas",
       "id": 13
+    },
+    {
+      "title": "asfab",
+      "content": "awvga",
+      "createdAt": 1737447567949,
+      "id": 14
     }
   ]
 }
